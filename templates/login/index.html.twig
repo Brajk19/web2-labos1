@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset("css/buttons.css") }}">
+        <link rel="stylesheet" href="{{ asset("css/standings.css") }}">
+        <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
+    {% endblock %}
+
+</head>
+<body>
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+{% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+
+<form style="margin: auto" action="{{ path('app_login') }}" method="post">
+    <label for="username">Email: </label>
+    <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+
+    <br>
+
+    <label for="password">Password: </label>
+    <input type="password" id="password" name="_password"/>
+
+    <br>
+
+    {# If you want to control the URL the user is redirected to on success
+        <input type="hidden" name="_target_path" value="/account"/> #}
+
+    <button style="color: black" type="submit">Login</button>
+</form>
+</body>
+</html>
+

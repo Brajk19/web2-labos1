@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset("css/buttons.css") }}">
+        <link rel="stylesheet" href="{{ asset("css/standings.css") }}">
+        <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
+    {% endblock %}
+
+</head>
+<body>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h2>{{ event.homeTeam.name }} - {{ event.awayTeam.name }}</h2>
+
+        <form action="{{ path('app_match_edit') }}" method="post">
+
+            <div class="headin">
+                <label class="headin" for="homeScore">Home score:</label>
+                <input style="color: black" id="homeScore" value="{{ event.homeScore }}" name="homeScore"><br>
+
+                <label class="headin" for="awayScore">Away score:</label>
+                <input style="color: black" id="awayScore" value="{{ event.awayScore }}" name="awayScore"><br>
+
+                <input name="event" value="{{ event.id }}" hidden>
+
+                <input style="color: black" type="submit" value="Submit">
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>

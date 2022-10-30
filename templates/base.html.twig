@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset("css/buttons.css") }}">
+            <link rel="stylesheet" href="{{ asset("css/standings.css") }}">
+            <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
+        {% endblock %}
+
+    </head>
+    <body>
+    {% if user is not null %}
+        <div>
+            <a class="btn btn-sm animated-button victoria-three"
+               href="{{ path('app_logout') }}"
+            >
+                Logout
+            </a>
+        </div>
+        <div class="col-md-12">Logged in as: {{ user.email }}</div>
+    {% else %}
+        <div>
+            <a class="btn btn-sm animated-button victoria-three"
+               href="{{ path('connect_auth0') }}"
+            >
+                Login
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Super Duper Sports League</h2>
+        </div>
+    </div>
+
+    <div class="ptable">
+        <h1 class="headin">Standings</h1>
+
+        <table>
+            <tr class="col">
+                <th>#</th>
+                <th>Team</th>
+                <th>Points</th>
+            </tr>
+
+
+            {% set i = 1 %}
+            {% for team in teams %}
+
+                {% if(i <= 3) %}
+                    <tr class="wpos">
+                {% else %}
+                    <tr class="pos">
+                {% endif %}
+
+                <td>{{ i }}</td>
+                <td>{{ team.name }}</td>
+                <td>{{ team.points }}</td>
+
+                </tr>
+
+                {% set i = i + 1 %}
+            {% endfor %}
+        </table>
+    </div>
+
+    <br>
+    <br>
+    <div class="ptable">
+        <h3 class="headin">Matches</h3>
+
+        {% for round, events in eventsData %}
+            <h4 class="headin">Round {{ round }}</h4>
+            <table>
+                <tr class="col">
+                    <th>Home</th>
+                    <th>Away</th>
+                    <th>Score</th>
+                </tr>
+
+
+                {% for event in events %}
+
+                    <tr class="pos">
+                        <td>{{ event.homeTeam.name }}</td>
+                        <td>{{ event.awayTeam.name }}</td>
+                        <td>{{ event.homeScore }} - {{ event.awayScore }}</td>
+                        {% if admin == true %}
+                            <td>
+                            <div>
+                                <a class="victoria-three"
+                                   href="{{ path('app_match', { event: event.id}) }}"
+                                >
+                                    Edit
+                                </a>
+                            </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </div>
+
+    {% if loggedIn == true %}
+        <br>
+        <div class="ptable">
+            <h3 class="headin">Comments</h3>
+            <table>
+                {% for comment in comments %}
+
+                    <tr class="pos">
+                        <td>{{ comment.author.email }}: </td>
+                        <td>{{ comment.content }}</td>
+                        {% if comment.author == user or admin == true %}
+                            <td style="color: red" class="wpos">
+                                <form action="{{ path('app_delete_comment') }}" method="post">
+                                        <input style="color: black" id="comment" value="{{ comment.id }}" name="comment" hidden><br>
+                                        <input class="btn btn-sm animated-button victoria-three" style="color: black" type="submit" value="Delete">
+                                </form>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <form action="{{ path('app_post_comment') }}" method="post" id="comment-form">
+            <label class="headin" for="comment">Add comment:</label>
+            <div class="headin">
+                <input style="color: black" id="comment" placeholder="Comment" name="content"><br>
+                <input style="color: black" type="submit" value="Submit">
+            </div>
+
+        </form>
+    {% endif %}
+    </body>
+</html>
